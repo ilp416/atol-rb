@@ -10,11 +10,14 @@ RSpec.describe Atol::Request::PostDocument::Item::Body do
       quantity: 2,
       config: Atol::Config::Factory.example,
       payment_method: 'full_payment',
-      payment_object: 'service'
+      payment_object: 'service',
+      agent_info_type: 'agent',
+      supplier_info_inn: '10101964',
+      supplier_info_name: "ООО 'Моя Оборона'"
     ]
   end
 
-  let(:body_hash) { described_class.new(params).to_h }
+  let(:body_hash) { described_class.new(**params).to_h }
 
   it 'inject name' do
     expect(body_hash[:name]).to eql 'item name'
@@ -42,6 +45,42 @@ RSpec.describe Atol::Request::PostDocument::Item::Body do
 
   it 'inject config default tax' do
     expect(body_hash[:tax]).to eql :example_default_tax
+  end
+
+  it 'inject agent type' do
+    expect(body_hash[:agent_info][:type]).to eql 'agent'
+  end
+
+  it 'inject supplier inn' do
+    expect(body_hash[:supplier_info][:inn]).to eql '10101964'
+  end
+
+  it 'inject supplier name' do
+    expect(body_hash[:supplier_info][:name]).to eql "ООО 'Моя Оборона'"
+  end
+
+  context 'when vat is blank' do
+    it { expect(body_hash.keys).not_to include :vat }
+  end
+
+  context 'when vat is present' do
+    let(:body_hash) { described_class.new(**params_with_vat).to_h }
+    let(:params_with_vat) { params.merge(vat_params) }
+    let(:vat_params) do
+      {
+        vat_type: vat_type,
+        vat_sum: 999.99
+      }
+    end
+    let(:vat_type) { 'vat0' }
+
+    it 'inject vat type' do
+      expect(body_hash[:vat][:type]).to eql 'vat0'
+    end
+
+    it 'inject vat sum' do
+      expect(body_hash[:vat][:sum]).to eql 999.99
+    end
   end
 
   context 'when quantity is 0' do
