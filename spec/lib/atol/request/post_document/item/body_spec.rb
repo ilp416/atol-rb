@@ -124,4 +124,41 @@ RSpec.describe Atol::Request::PostDocument::Item::Body do
       )
     end
   end
+
+  context 'when vat is blank' do
+    it { expect(body_hash.keys).not_to include :vat }
+  end
+
+  context 'when vat is present' do
+    let(:body_hash) { described_class.new(**params_with_vat).to_h }
+    let(:params_with_vat) { params.merge(vat_params) }
+    let(:vat_params) do
+      {
+        vat_type: vat_type,
+        vat_sum: vat_sum
+      }
+    end
+    let(:vat_type) { 'vat0' }
+    let(:vat_sum) { 999.99 }
+
+    it 'inject vat type' do
+      expect(body_hash[:vat][:type]).to eql 'vat0'
+    end
+
+    it 'inject vat sum' do
+      expect(body_hash[:vat][:sum]).to eql 999.99
+    end
+
+    context 'when vat_type is nil' do
+      let(:vat_type) { nil }
+
+      it { expect(body_hash.keys).not_to include :vat }
+    end
+
+    context 'when vat_sum is nil' do
+      let(:vat_sum) { nil }
+
+      it { expect(body_hash.keys).not_to include :vat }
+    end
+  end
 end

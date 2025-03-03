@@ -29,12 +29,12 @@ module Atol
 
           attr_accessor :config, :name, :price, :quantity, :payment_method,
                         :payment_object, :agent_type, :supplier_phones, :supplier_name,
-                        :supplier_inn
+                        :supplier_inn, :vat_type, :vat_sum
 
           def initialize(
             config: nil, name:, price:, quantity: 1, payment_method:,
             payment_object:, agent_type: nil, supplier_phones: nil,
-            supplier_name: nil, supplier_inn: nil
+            supplier_name: nil, supplier_inn: nil, vat_type: nil, vat_sum: nil
           )
             raise Atol::ZeroItemQuantityError if quantity.to_f.zero?
             raise BadPaymentMethodError unless PAYMENT_METHODS.include?(payment_method.to_s)
@@ -51,6 +51,8 @@ module Atol
             self.supplier_phones = supplier_phones.to_a
             self.supplier_name = supplier_name.to_s
             self.supplier_inn = supplier_inn.to_s
+            self.vat_type = vat_type
+            self.vat_sum = vat_sum
           end
 
           def to_h
@@ -90,6 +92,10 @@ module Atol
                   inn: supplier_inn
                 }
             end
+            if vat_type && vat_sum
+              fields[:vat] = { type: vat_type.to_s, sum: vat_sum.to_f }
+            end
+
             fields
           end
         end
