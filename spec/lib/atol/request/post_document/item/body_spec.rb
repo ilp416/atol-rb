@@ -40,10 +40,6 @@ RSpec.describe Atol::Request::PostDocument::Item::Body do
     expect(body_hash[:sum]).to eql 200.0
   end
 
-  it 'inject config default tax' do
-    expect(body_hash[:tax]).to eql :example_default_tax
-  end
-
   it 'does not inject agent_type' do
     expect(body_hash.keys.include?(:agent_info)).to eq false
   end
@@ -145,18 +141,12 @@ RSpec.describe Atol::Request::PostDocument::Item::Body do
       expect(body_hash[:vat][:type]).to eql 'vat0'
     end
 
-    it 'inject vat sum' do
-      expect(body_hash[:vat][:sum]).to eql 999.99
+    it 'not inject vat sum' do
+      expect(body_hash[:vat].keys).not_to include :sum
     end
 
     context 'when vat_type is nil' do
       let(:vat_type) { nil }
-
-      it { expect(body_hash.keys).not_to include :vat }
-    end
-
-    context 'when vat_sum is nil' do
-      let(:vat_sum) { nil }
 
       it { expect(body_hash.keys).not_to include :vat }
     end

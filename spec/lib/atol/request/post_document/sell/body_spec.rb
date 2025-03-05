@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/atol/request/post_document/sell/body'
+require './lib/atol'
 
 RSpec.describe Atol::Request::PostDocument::Sell::Body do
   describe '#new' do
@@ -22,9 +23,12 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
       external_id: '123',
       phone: '123456',
       email: 'email@example.com',
-      items: [{ sum: 10 }, { sum: 5 }],
+      items: items_params,
       config: Atol::Config::Factory.example
     ]
+    end
+    let(:items_params) do
+      [{ sum: 10 }, { sum: 5 }]
     end
 
     before { allow(Time).to receive(:now).and_return(timestamp) }
@@ -74,6 +78,30 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
 
       it 'total' do
         expect(body_hash[:receipt][:total]).to eql 15
+      end
+    end
+
+    describe 'group and calculate vats array' do
+      let(:items_params) do
+        [
+          { sum: 10, vat_type: 'vat20', vat_sum: 1.53 },
+          { sum: 10, vat_type: 'vat20', vat_sum: 1.53 },
+          { sum: 5, vat_type: 'vat10', vat_sum: 0.54 },
+          { sum: 5, vat_type: 'none', vat_sum: 0 },
+          { sum: 5, vat_type: nil },
+          { sum: 5 }
+        ]
+      end
+      let(:vat_results) do
+        [
+          { type: 'vat20', sum: 3.06 },
+          { type: 'vat10', sum: 0.54 },
+          { type: 'none', sum: 0 }
+        ]
+      end
+
+      it 'vats' do
+        expect(body_hash[:receipt][:vats]).to eql vat_results
       end
     end
 

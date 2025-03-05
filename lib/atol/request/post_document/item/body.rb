@@ -75,7 +75,6 @@ module Atol
               price: price,
               quantity: quantity,
               sum: (price * quantity).round(2),
-              tax: config.default_tax,
               payment_method: payment_method,
               payment_object: payment_object
             }
@@ -92,8 +91,8 @@ module Atol
                   inn: supplier_inn
                 }
             end
-            if vat_type && vat_sum
-              fields[:vat] = { type: vat_type.to_s, sum: vat_sum.to_f }
+            if vat_type
+              fields[:vat] = { type: vat_type.to_s }
             end
 
             fields

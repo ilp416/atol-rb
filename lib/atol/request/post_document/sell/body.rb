@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'atol'
 require 'atol/errors'
 
 module Atol
@@ -58,7 +59,8 @@ module Atol
                     sum: 0,
                     type: @config.default_payment_type
                   }
-                ]
+                ],
+                vats: grouped_vats,
               },
               service: {},
               timestamp: Time.now.strftime(Atol::TIMESTAMP_FORMAT)
@@ -67,6 +69,14 @@ module Atol
 
           def total
             @total ||= @items.inject(0) { |sum, item| sum += item[:sum] }
+          end
+
+          def grouped_vats
+            @items.group_by {|i| i[:vat_type]}.map do |vat_type, items|
+              next if vat_type.blank?
+
+              { type: vat_type, sum: items.filter_map { |j| j[:vat_sum] }.sum }
+            end.compact
           end
         end
       end
