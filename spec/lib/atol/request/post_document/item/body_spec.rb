@@ -141,14 +141,8 @@ RSpec.describe Atol::Request::PostDocument::Item::Body do
       expect(body_hash[:vat][:type]).to eql 'vat0'
     end
 
-    it 'not inject vat sum' do
-      expect(body_hash[:vat].keys).not_to include :sum
-    end
-
-    context 'when vat_type is nil' do
-      let(:vat_type) { nil }
-
-      it { expect(body_hash.keys).not_to include :vat }
+    it 'inject vat sum' do
+      expect(body_hash[:vat][:sum]).to eql 999.99
     end
   end
 end

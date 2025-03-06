@@ -72,11 +72,13 @@ module Atol
           end
 
           def grouped_vats
-            @items.group_by {|i| i[:vat_type]}.map do |vat_type, items|
-              next if vat_type.blank?
+            @items
+              .select { |i| i[:vat].present? && i[:vat][:type].present? }
+              .group_by { |i| i[:vat][:type] }.map do |vat_type, items|
+                next if vat_type.blank?
 
-              { type: vat_type, sum: items.filter_map { |j| j[:vat_sum] }.sum }
-            end.compact
+                { type: vat_type, sum: items.filter_map { |j| j[:vat][:sum] }.sum }
+              end.compact
           end
         end
       end

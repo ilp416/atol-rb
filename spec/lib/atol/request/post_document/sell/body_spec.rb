@@ -84,11 +84,11 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
     describe 'group and calculate vats array' do
       let(:items_params) do
         [
-          { sum: 10, vat_type: 'vat20', vat_sum: 1.53 },
-          { sum: 10, vat_type: 'vat20', vat_sum: 1.53 },
-          { sum: 5, vat_type: 'vat10', vat_sum: 0.54 },
-          { sum: 5, vat_type: 'none', vat_sum: 0 },
-          { sum: 5, vat_type: nil },
+          { sum: 10, vat: { type: 'vat20', sum: 1.53 }},
+          { sum: 10, vat: { type: 'vat20', sum: 1.53 }},
+          { sum: 5, vat: { type: 'vat10', sum: 0.54 }},
+          { sum: 5, vat: { type: 'none', sum: 0 }},
+          { sum: 5, vat: { type: nil }},
           { sum: 5 }
         ]
       end

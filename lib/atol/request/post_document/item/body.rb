@@ -92,7 +92,7 @@ module Atol
                 }
             end
             if vat_type
-              fields[:vat] = { type: vat_type.to_s }
+              fields[:vat] = { type: vat_type.to_s, sum: vat_sum.to_f }
             end
 
             fields
