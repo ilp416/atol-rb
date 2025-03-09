@@ -81,27 +81,33 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
       end
     end
 
-    describe 'group and calculate vats array' do
-      let(:items_params) do
-        [
-          { sum: 10, vat: { type: 'vat20', sum: 1.53 }},
-          { sum: 10, vat: { type: 'vat20', sum: 1.53 }},
-          { sum: 5, vat: { type: 'vat10', sum: 0.54 }},
-          { sum: 5, vat: { type: 'none', sum: 0 }},
-          { sum: 5, vat: { type: nil }},
-          { sum: 5 }
-        ]
-      end
-      let(:vat_results) do
-        [
-          { type: 'vat20', sum: 3.06 },
-          { type: 'vat10', sum: 0.54 },
-          { type: 'none', sum: 0 }
-        ]
+    describe 'vats param' do
+      context 'when vat at items is empty' do
+        it { expect(body_hash[:receipt].keys).not_to include :vats }
       end
 
-      it 'vats' do
-        expect(body_hash[:receipt][:vats]).to eql vat_results
+      context 'when vat at items is present' do
+        let(:items_params) do
+          [
+            { sum: 10, vat: { type: 'vat20', sum: 1.53 }},
+            { sum: 10, vat: { type: 'vat20', sum: 1.53 }},
+            { sum: 5, vat: { type: 'vat10', sum: 0.54 }},
+            { sum: 5, vat: { type: 'none', sum: 0 }},
+            { sum: 5, vat: { type: nil }},
+            { sum: 5 }
+          ]
+        end
+        let(:vat_results) do
+          [
+            { type: 'vat20', sum: 3.06 },
+            { type: 'vat10', sum: 0.54 },
+            { type: 'none', sum: 0 }
+          ]
+        end
+
+        it 'calculated vats by groups' do
+          expect(body_hash[:receipt][:vats]).to eql vat_results
+        end
       end
     end
 

@@ -38,6 +38,7 @@ module Atol
               client[:phone] = @phone unless @phone.empty?
               result[:service][:callback_url] = @config.callback_url if @config.callback_url
 
+              receipt[:vats] = grouped_vats unless grouped_vats.empty?
               receipt[:total] = receipt[:payments][0][:sum] = total
               receipt[:items] = @items
             end
@@ -59,8 +60,7 @@ module Atol
                     sum: 0,
                     type: @config.default_payment_type
                   }
-                ],
-                vats: grouped_vats,
+                ]
               },
               service: {},
               timestamp: Time.now.strftime(Atol::TIMESTAMP_FORMAT)
