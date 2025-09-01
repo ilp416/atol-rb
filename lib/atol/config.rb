@@ -9,6 +9,7 @@ module Atol
     attr_config :login,
                 :password,
                 :inn,
+                :internet,
                 :group_code,
                 :payment_address,
                 :default_sno,

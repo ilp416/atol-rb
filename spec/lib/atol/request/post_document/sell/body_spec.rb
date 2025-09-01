@@ -55,6 +55,10 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
       it 'payment address' do
         expect(body_hash[:receipt][:company][:payment_address]).to eql :example_payment_address
       end
+
+      it 'internet' do
+        expect(body_hash[:receipt][:internet]).to be_truthy
+      end
     end
 
     describe 'injects document params' do
