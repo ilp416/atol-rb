@@ -10,6 +10,7 @@ module Atol
                 :password,
                 :inn,
                 :internet,
+                :timezone,
                 :group_code,
                 :payment_address,
                 :default_sno,

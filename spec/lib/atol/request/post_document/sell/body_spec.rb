@@ -59,6 +59,10 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
       it 'internet' do
         expect(body_hash[:receipt][:internet]).to be_truthy
       end
+
+      it 'timezone' do
+        expect(body_hash[:receipt][:timezone]).to eql 2
+      end
     end
 
     describe 'injects document params' do

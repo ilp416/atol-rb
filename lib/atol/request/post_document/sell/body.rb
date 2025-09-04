@@ -61,7 +61,8 @@ module Atol
                     type: @config.default_payment_type
                   }
                 ],
-                internet: @config.internet
+                internet: @config.internet,
+                timezone: @config.timezone
               },
               service: {},
               timestamp: Time.now.strftime(Atol::TIMESTAMP_FORMAT)

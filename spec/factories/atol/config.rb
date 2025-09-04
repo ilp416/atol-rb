@@ -15,7 +15,8 @@ module Atol
           default_sno: :example_default_sno,
           default_tax: :example_default_tax,
           http_client: Net::HTTP,
-          internet: true
+          internet: true,
+          timezone: 2
         })
       end
     end
