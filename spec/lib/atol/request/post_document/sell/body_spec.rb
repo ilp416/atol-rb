@@ -44,6 +44,14 @@ RSpec.describe Atol::Request::PostDocument::Sell::Body do
         expect(body_hash[:receipt][:payments][0][:type]).to eql 1
       end
 
+      context 'when payment_type given' do
+        before { params[:payment_type] = 2 }
+
+        it 'overrides payments type' do
+          expect(body_hash[:receipt][:payments][0][:type]).to eql 2
+        end
+      end
+
       it 'items' do
         expect(body_hash[:receipt][:items]).to eql params[:items]
       end

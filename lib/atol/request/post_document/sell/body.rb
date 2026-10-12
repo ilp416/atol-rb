@@ -8,7 +8,7 @@ module Atol
     class PostDocument
       module Sell
         class Body
-          def initialize(external_id:, phone: '', email: '', items:, config: nil)
+          def initialize(external_id:, phone: '', email: '', items:, payment_type: nil, config: nil)
             raise(Atol::EmptyClientContactError) if phone.empty? && email.empty?
             raise(Atol::EmptySellItemsError) if items.empty?
 
@@ -17,6 +17,7 @@ module Atol
             @phone = phone
             @email = email
             @items = items
+            @payment_type = payment_type || @config.default_payment_type
           end
 
           def to_h
@@ -58,7 +59,7 @@ module Atol
                 payments: [
                   {
                     sum: 0,
-                    type: @config.default_payment_type
+                    type: @payment_type
                   }
                 ],
                 internet: @config.internet,
